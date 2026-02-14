@@ -51,7 +51,7 @@ export class SignupComponent {
           this.errorMessage.set(error.message);
         } else {
           this.successMessage.set('Sign up successful! Redirecting to verification...');
-          this.router.navigate(['/auth/verify'], { queryParams: { email: email } });
+          this.router.navigate(['auth', 'signup', 'verify'], { queryParams: { email: email } });
         }
       } catch (err) {
         this.errorMessage.set('An unexpected error occurred.');

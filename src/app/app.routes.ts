@@ -1,6 +1,12 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
+  {
+    path: '',
+    redirectTo: 'auth/login',
+    pathMatch: 'full',
+  },
   {
     path: 'auth',
     loadComponent: () => import('./auth/auth').then((m) => m.AuthComponent),
@@ -12,9 +18,15 @@ export const routes: Routes = [
       {
         path: 'signup',
         loadComponent: () => import('./auth/signup/signup').then((m) => m.SignupComponent),
+        // children: [
+        //   {
+        //     path: 'verify',
+        //     loadComponent: () => import('./auth/verify/verify').then((m) => m.VerifyComponent),
+        //   },
+        // ],
       },
       {
-        path: 'verify',
+        path: 'signup/verify',
         loadComponent: () => import('./auth/verify/verify').then((m) => m.VerifyComponent),
       },
       {
@@ -27,10 +39,10 @@ export const routes: Routes = [
   {
     path: 'home/:id',
     loadComponent: () => import('./home/home').then((m) => m.HomeComponent),
+    canActivate: [authGuard],
   },
   {
-    path: '',
-    redirectTo: 'auth/login',
-    pathMatch: 'full',
+    path: '**',
+    loadComponent: () => import('./shared/not-found/not-found').then((m) => m.NotFoundComponent),
   },
 ];

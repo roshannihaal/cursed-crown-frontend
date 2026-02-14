@@ -2,3 +2,8 @@
 @import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+input::placeholder {
+  color: #9e9e9e; /* Change to your desired color */
+  opacity: 1; /* Prevent default fading */
+}

@@ -1,0 +1,47 @@
+<div class="min-h-[70vh] flex items-center justify-center p-4">
+  <div class="text-center space-y-8 max-w-lg">
+    <div class="relative">
+      <h1
+        class="text-[12rem] font-black leading-none text-slate-100 dark:text-slate-900 select-none"
+      >
+        404
+      </h1>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="space-y-2">
+          <p class="text-2xl font-bold text-slate-900 dark:text-white">Lost in the Abyss?</p>
+          <p class="text-slate-500 dark:text-slate-400">
+            The page you're looking for has vanished into the Curse.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-center gap-4">
+      <button
+        (click)="handleBackAction()"
+        class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/30 transition-all hover:scale-105 active:scale-95"
+      >
+        {{ isLoggedIn() ? 'Back to Sanctuary' : 'Back to Login' }}
+      </button>
+    </div>
+
+    <div class="pt-12 grid grid-cols-2 gap-4 text-left">
+      <div
+        class="p-6 rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800"
+      >
+        <p class="text-xs font-bold text-indigo-600 uppercase tracking-widest">Mistake?</p>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          If you think this is a bug, please let us know.
+        </p>
+      </div>
+      <div
+        class="p-6 rounded-3xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800"
+      >
+        <p class="text-xs font-bold text-violet-600 uppercase tracking-widest">Help</p>
+        <p class="text-sm text-slate-600 dark:text-slate-400 mt-1">
+          Check our documentation for champion guides.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
