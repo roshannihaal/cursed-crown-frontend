@@ -1,0 +1,65 @@
+<div class="max-w-4xl mx-auto space-y-8">
+  <div
+    class="relative overflow-hidden bg-white dark:bg-slate-900 rounded-[2.5rem] p-12 shadow-2xl shadow-slate-200 dark:shadow-none border border-slate-100 dark:border-slate-800"
+  >
+    <!-- Decorative element -->
+    <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
+    <div
+      class="absolute -bottom-24 -left-24 w-64 h-64 bg-violet-500/10 rounded-full blur-3xl"
+    ></div>
+
+    <div class="relative z-10 text-center space-y-6">
+      <div
+        class="inline-flex items-center justify-center p-4 bg-indigo-100 dark:bg-indigo-900/30 rounded-3xl mb-4"
+      >
+        <span class="text-4xl">👑</span>
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+        Welcome Back,
+        <span
+          class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400"
+          >{{ username() }}</span
+        >
+      </h1>
+
+      <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+        Your champion tracking dashboard is ready. Begin your journey and track your progress in the
+        CursedCrown.
+      </p>
+
+      <div class="pt-8 flex flex-wrap justify-center gap-4">
+        <button
+          class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/30 transition-all hover:scale-105 active:scale-95"
+        >
+          View Champions
+        </button>
+        <button
+          (click)="signOut()"
+          routerLink="/auth/login"
+          class="px-8 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold rounded-2xl transition-all"
+        >
+          Sign Out
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    @for (
+      stat of [
+        { label: 'Active Champions', value: '0', color: 'text-indigo-600' },
+        { label: 'Battle Pass', value: 'Level 1', color: 'text-violet-600' },
+        { label: 'Rank', value: 'Unranked', color: 'text-emerald-600' },
+      ];
+      track stat.label
+    ) {
+      <div
+        class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800"
+      >
+        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">{{ stat.label }}</p>
+        <p class="text-2xl font-black mt-2 {{ stat.color }} dark:text-white">{{ stat.value }}</p>
+      </div>
+    }
+  </div>
+</div>
