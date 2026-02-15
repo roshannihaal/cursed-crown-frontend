@@ -1,0 +1,98 @@
+<div
+  class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-6 transition-colors duration-300"
+>
+  <div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+      <div class="space-y-1">
+        <h1
+          class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-yellow-400 dark:to-yellow-600"
+        >
+          Public Games
+        </h1>
+        <p class="text-slate-500 dark:text-slate-400">Explore completed battles and history.</p>
+      </div>
+    </div>
+
+    <div *ngIf="loading && games.length === 0" class="text-center py-12">
+      <p class="text-xl text-gray-500 dark:text-gray-400">Loading games...</p>
+    </div>
+
+    <div
+      *ngIf="error"
+      class="bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded mb-6"
+    >
+      {{ error }}
+    </div>
+
+    <div
+      *ngIf="!loading && !error && games.length === 0"
+      class="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700"
+    >
+      <p class="text-xl text-gray-500 dark:text-gray-400">No completed games found.</p>
+    </div>
+
+    <div class="grid gap-4">
+      <div
+        *ngFor="let game of games"
+        class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-yellow-500 shadow-sm dark:shadow-none transition-all"
+      >
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">{{ game.name }}</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              <!-- Created by is not available in the current select, might need to add it if needed -->
+            </p>
+          </div>
+
+          <div class="flex flex-col items-end gap-1">
+            <span
+              class="px-3 py-1 rounded-full text-xs font-semibold uppercase"
+              [ngClass]="{
+                'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200':
+                  game.status === 'completed',
+                'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300':
+                  game.status === 'no_result',
+              }"
+            >
+              {{ game.status.replace('_', ' ') }}
+            </span>
+
+            <p
+              *ngIf="game.champion"
+              class="text-sm font-medium text-yellow-600 dark:text-yellow-400 flex items-center gap-1"
+            >
+              👑 Champion: {{ game.champion.username }}
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="mt-4 flex justify-between items-center text-sm text-gray-500 dark:text-gray-400"
+        >
+          <span>Players: {{ game.game_players?.[0]?.count || 0 }}</span>
+          <span>{{ game.created_at | date: 'mediumDate' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="hasMore && !loading" class="mt-8 flex justify-center">
+      <button
+        (click)="loadMore()"
+        class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-full transition-colors shadow-sm"
+      >
+        Load More
+      </button>
+    </div>
+
+    <div *ngIf="loading && games.length > 0" class="text-center py-4">
+      <p class="text-gray-500 dark:text-gray-400">Loading more games...</p>
+    </div>
+
+    <div
+      *ngIf="!hasMore && games.length > 0"
+      class="text-center py-8 text-gray-500 dark:text-gray-400"
+    >
+      No more games to display.
+    </div>
+  </div>
+</div>

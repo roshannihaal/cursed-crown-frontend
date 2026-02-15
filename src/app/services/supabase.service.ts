@@ -132,4 +132,16 @@ export class SupabaseService {
       },
     });
   }
+
+  async getPublicGames(page: number = 0, limit: number = 20) {
+    const start = page * limit;
+    const end = start + limit - 1;
+
+    return await this.supabase
+      .from('games')
+      .select('*, game_players(count), champion:profiles!champion_id(username)', { count: 'exact' })
+      .in('status', ['completed', 'no_result'])
+      .order('created_at', { ascending: false })
+      .range(start, end);
+  }
 }

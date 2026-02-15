@@ -57,6 +57,11 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'games',
+    loadComponent: () =>
+      import('./public-games/public-games.component').then((m) => m.PublicGamesComponent),
+  },
+  {
     path: '**',
     loadComponent: () => import('./shared/not-found/not-found').then((m) => m.NotFoundComponent),
   },
