@@ -62,4 +62,61 @@ export class SupabaseService {
       email: email,
     });
   }
+
+  async getProfiles() {
+    return await this.supabase
+      .from('profiles')
+      .select('id, username')
+      .order('username', { ascending: true });
+  }
+
+  async createGame(name: string, playerIds: string[]) {
+    await this.supabase.functions.invoke('create-game', {
+      body: {
+        name,
+        game_players: playerIds,
+      },
+    });
+
+    // // 1. Create the game
+    // const { data: game, error: gameError } = await this.supabase
+    //   .from('games')
+    //   .insert({
+    //     name,
+    //     created_by: createdBy,
+    //     status: 'in_progress',
+    //   })
+    //   .select()
+    //   .single();
+    // if (gameError) throw gameError;
+    // // 2. Add players to the game
+    // const playersToInsert = playerIds.map((playerId) => ({
+    //   game_id: game.id,
+    //   player_id: playerId,
+    // }));
+    // const { error: playersError } = await this.supabase
+    //   .from('game_players')
+    //   .insert(playersToInsert);
+    // if (playersError) throw playersError;
+    // return game;
+  }
+
+  async getAllGames(status?: string) {
+    const body: any = {};
+    if (status && status !== 'all') {
+      body.status = status;
+    }
+    return await this.supabase.functions.invoke('get-all-games', {
+      body,
+    });
+  }
+
+  async updateGameStatus(gameId: string, status: string) {
+    return await this.supabase.functions.invoke('update-game-status', {
+      body: {
+        game_id: gameId,
+        status,
+      },
+    });
+  }
 }

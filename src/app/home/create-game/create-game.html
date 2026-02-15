@@ -1,0 +1,154 @@
+<div class="max-w-4xl mx-auto py-8">
+  <div class="space-y-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+      <div class="space-y-1">
+        <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          Start New Game
+        </h2>
+        <p class="text-slate-500 dark:text-slate-400">Assemble your champions for a new battle.</p>
+      </div>
+      <a
+        [routerLink]="['/user', userId()]"
+        class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-6 h-6 text-slate-600 dark:text-slate-400"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </a>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="gameForm" (ngSubmit)="onSubmit()" class="space-y-8">
+      <!-- Game Name -->
+      <div
+        class="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/40 dark:shadow-none"
+      >
+        <label
+          for="name"
+          class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-4"
+          >Game Name</label
+        >
+        <input
+          id="name"
+          formControlName="name"
+          type="text"
+          class="block w-full px-6 py-4 text-xl rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+          placeholder="The Eternal Siege"
+        />
+        <div
+          *ngIf="gameForm.get('name')?.touched && gameForm.get('name')?.invalid"
+          class="mt-2 text-sm text-red-500"
+        >
+          Game name is required (min 3 characters).
+        </div>
+      </div>
+
+      <!-- Player Selection -->
+      <div class="space-y-6">
+        <div class="flex items-center justify-between px-2">
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            Select Your Allies
+            <span class="text-sm font-medium text-slate-500 dark:text-slate-400">
+              ({{ selectedPlayerIds().size - 1 }} selected)
+            </span>
+          </h3>
+          <p
+            class="text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest"
+          >
+            Min 2 additional players
+          </p>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading()" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          @for (i of [1, 2, 3, 4, 5, 6]; track i) {
+            <div class="h-24 rounded-2xl bg-slate-100 dark:bg-slate-800 animate-pulse"></div>
+          }
+        </div>
+
+        <!-- Player list -->
+        <div *ngIf="!isLoading()" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          @for (profile of profiles(); track profile.id) {
+            <button
+              type="button"
+              (click)="togglePlayer(profile.id)"
+              [class.border-indigo-600]="isSelected(profile.id)"
+              [class.ring-2]="isSelected(profile.id)"
+              [class.ring-indigo-500]="isSelected(profile.id)"
+              class="p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 text-left transition-all hover:scale-105 active:scale-95 group relative overflow-hidden"
+            >
+              <div class="flex items-center gap-3 relative z-10">
+                <div
+                  class="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-indigo-600"
+                >
+                  {{ profile.username[0].toUpperCase() }}
+                </div>
+                <span class="font-bold text-slate-900 dark:text-white truncate">{{
+                  profile.username
+                }}</span>
+              </div>
+              <!-- Checkmark icon for selected -->
+              <div *ngIf="isSelected(profile.id)" class="absolute top-2 right-2">
+                <div class="bg-indigo-600 rounded-full p-1 shadow-lg">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="3"
+                    stroke="currentColor"
+                    class="w-3 h-3 text-white"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="absolute -bottom-4 -right-4 w-16 h-16 bg-indigo-500/5 rounded-full group-hover:bg-indigo-500/10 transition-colors"
+              ></div>
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="pt-8">
+        <button
+          type="submit"
+          [disabled]="!canSubmit || isSaving()"
+          class="w-full py-4 text-xl font-black rounded-3xl text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-2xl shadow-indigo-500/40 transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3"
+        >
+          <span
+            *ngIf="isSaving()"
+            class="animate-spin h-6 w-6 border-4 border-white border-t-transparent rounded-full"
+          ></span>
+          {{ isSaving() ? 'Forging Game...' : 'Start New Battle' }}
+        </button>
+        <p
+          *ngIf="!canSubmit && gameForm.valid"
+          class="text-center mt-4 text-sm text-slate-500 dark:text-slate-400"
+        >
+          You need at least 2 more players to begin the journey.
+        </p>
+      </div>
+
+      <div
+        *ngIf="errorMessage()"
+        class="text-center p-4 bg-red-50 dark:bg-red-900/20 text-red-600 rounded-2xl"
+      >
+        {{ errorMessage() }}
+      </div>
+    </form>
+  </div>
+</div>

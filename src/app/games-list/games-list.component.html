@@ -1,0 +1,140 @@
+<div
+  class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-6 transition-colors duration-300"
+>
+  <div class="max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+      <h1
+        class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-yellow-400 dark:to-yellow-600"
+      >
+        Games List
+      </h1>
+
+      <div class="flex items-center gap-2">
+        <label for="status-filter" class="text-gray-700 dark:text-gray-300">Status:</label>
+        <select
+          id="status-filter"
+          [(ngModel)]="selectedFilter"
+          (change)="onFilterChange()"
+          class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-700 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-yellow-500 transition-colors"
+        >
+          <option *ngFor="let filter of filters" [value]="filter.value">
+            {{ filter.label }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div *ngIf="loading" class="text-center py-12">
+      <p class="text-xl text-gray-500 dark:text-gray-400">Loading games...</p>
+    </div>
+
+    <div
+      *ngIf="error"
+      class="bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded mb-6"
+    >
+      {{ error }}
+    </div>
+
+    <div
+      *ngIf="!loading && !error && games.length === 0"
+      class="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm dark:shadow-none border border-gray-200 dark:border-gray-700"
+    >
+      <p class="text-xl text-gray-500 dark:text-gray-400">No games found.</p>
+    </div>
+
+    <div *ngIf="!loading && !error && games.length > 0" class="grid gap-4">
+      <div
+        *ngFor="let game of games"
+        class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-yellow-500 shadow-sm dark:shadow-none transition-all"
+      >
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">{{ game.name }}</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              Created by: {{ game.created_by?.username || 'Unknown' }}
+            </p>
+          </div>
+
+          <div class="flex flex-col items-end gap-2">
+            <!-- Normal View -->
+            <ng-container *ngIf="editingGameId !== game.id">
+              <span
+                class="px-3 py-1 rounded-full text-xs font-semibold uppercase"
+                [ngClass]="{
+                  'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200':
+                    game.status === 'in_progress',
+                  'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200':
+                    game.status === 'voting',
+                  'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200':
+                    game.status === 'completed',
+                  'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300':
+                    game.status === 'no_result',
+                }"
+              >
+                {{ game.status }}
+              </span>
+
+              <button
+                *ngIf="currentUserId === game.created_by?.id && game.status !== 'completed'"
+                (click)="enableEdit(game)"
+                class="mt-2 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1 px-3 rounded transition-colors flex items-center gap-1 shadow-sm"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-3 h-3"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                  />
+                </svg>
+                Edit
+              </button>
+            </ng-container>
+
+            <!-- Edit View -->
+            <div
+              *ngIf="editingGameId === game.id"
+              class="flex flex-col gap-2 items-end bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg border border-gray-200 dark:border-gray-600"
+            >
+              <select
+                [(ngModel)]="newStatus"
+                class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:ring-yellow-500 w-full"
+              >
+                <option *ngFor="let option of statusOptions" [value]="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+
+              <div class="flex gap-2">
+                <button
+                  (click)="saveStatus(game)"
+                  class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3 py-1 rounded transition-colors shadow-sm"
+                >
+                  Save
+                </button>
+                <button
+                  (click)="cancelEdit()"
+                  class="text-xs bg-slate-500 hover:bg-slate-600 text-white font-medium px-3 py-1 rounded transition-colors shadow-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="mt-4 flex justify-between items-center text-sm text-gray-500 dark:text-gray-400"
+        >
+          <span>Players: {{ game.players?.length || 0 }}</span>
+          <span>{{ game.created_at | date: 'medium' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

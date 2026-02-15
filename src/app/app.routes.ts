@@ -37,9 +37,24 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'home/:id',
-    loadComponent: () => import('./home/home').then((m) => m.HomeComponent),
+    path: 'user/:id',
     canActivate: [authGuard],
+    children: [
+      {
+        path: '',
+        loadComponent: () => import('./home/home').then((m) => m.HomeComponent),
+      },
+      {
+        path: 'create_game',
+        loadComponent: () =>
+          import('./home/create-game/create-game').then((m) => m.CreateGameComponent),
+      },
+      {
+        path: 'games-list',
+        loadComponent: () =>
+          import('./games-list/games-list.component').then((m) => m.GamesListComponent),
+      },
+    ],
   },
   {
     path: '**',

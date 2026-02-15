@@ -35,9 +35,15 @@ export class LoginComponent {
         const { data, error } = await this.supabase.signIn(email!, password!);
 
         if (error) {
-          this.errorMessage.set(error.message);
+          if (error.code === 'email_not_confirmed') {
+            await this.supabase.resendOTP(email!);
+            this.router.navigate(['/auth/signup/verify'], { queryParams: { email: email } });
+          } else {
+            this.errorMessage.set(error.message);
+          }
         } else {
-          this.router.navigate(['/']); // Redirect to home on success
+          const userId = data.user?.id;
+          this.router.navigate(['/user', userId]);
         }
       } catch (err) {
         this.errorMessage.set('An unexpected error occurred.');

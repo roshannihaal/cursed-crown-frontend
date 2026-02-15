@@ -85,7 +85,7 @@ export class VerifyComponent implements OnInit, OnDestroy {
         } else {
           const userId = data.user?.id;
           if (userId) {
-            this.router.navigate(['/home', userId]);
+            this.router.navigate(['/user', userId]);
           } else {
             this.router.navigate(['/auth/login']);
           }
