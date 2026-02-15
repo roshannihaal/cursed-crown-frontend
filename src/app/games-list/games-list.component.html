@@ -55,8 +55,94 @@
             </p>
           </div>
 
-          <div class="flex flex-col items-end gap-2">
-            <!-- Normal View -->
+          <div class="flex items-center gap-2">
+            <!-- Voting Section -->
+            <ng-container *ngIf="game.status === 'voting' && isPlayerInGame(game)">
+              <!-- Vote Button -->
+              <button
+                *ngIf="votingGameId !== game.id"
+                (click)="initiateVote(game)"
+                class="text-xs bg-purple-600 hover:bg-purple-700 text-white font-medium py-1 px-3 rounded transition-colors flex items-center gap-1 shadow-sm"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-3 h-3"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M9 12.75 11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 0 1-1.043 3.296 3.745 3.745 0 0 1-3.296 1.043A3.745 3.745 0 0 1 12 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 0 1-3.296-1.043 3.745 3.745 0 0 1-1.043-3.296A3.745 3.745 0 0 1 3 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 0 1 1.043-3.296 3.746 3.746 0 0 1 3.296-1.043A3.746 3.746 0 0 1 12 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 0 1 3.296 1.043 3.746 3.746 0 0 1 1.043 3.296A3.745 3.745 0 0 1 21 12Z"
+                  />
+                </svg>
+                Vote
+              </button>
+
+              <!-- Voting Interface -->
+              <div
+                *ngIf="votingGameId === game.id"
+                class="flex items-center gap-2 bg-purple-50 dark:bg-purple-900/20 p-1 rounded-lg border border-purple-200 dark:border-purple-800"
+              >
+                <select
+                  [(ngModel)]="selectedChampionId"
+                  class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-purple-500 dark:focus:ring-purple-400 w-32"
+                >
+                  <option value="" disabled selected>Select</option>
+                  <option
+                    *ngFor="let player of game.players || game.game_players"
+                    [value]="player.id || player.player_id || player.user_id"
+                  >
+                    {{ player.username || player.user?.username || 'Unknown' }}
+                  </option>
+                </select>
+
+                <button
+                  (click)="submitVote(game)"
+                  [disabled]="!selectedChampionId"
+                  class="text-xs bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-medium px-2 py-1 rounded transition-colors shadow-sm"
+                >
+                  ✔
+                </button>
+                <button
+                  (click)="cancelVote()"
+                  class="text-xs bg-slate-500 hover:bg-slate-600 text-white font-medium px-2 py-1 rounded transition-colors shadow-sm"
+                >
+                  ✕
+                </button>
+              </div>
+            </ng-container>
+
+            <!-- Edit Button (Visible if not editing status) -->
+            <button
+              *ngIf="
+                editingGameId !== game.id &&
+                currentUserId === game.created_by?.id &&
+                game.status !== 'completed'
+              "
+              (click)="enableEdit(game)"
+              class="text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1 px-3 rounded transition-colors flex items-center gap-1 shadow-sm"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-3 h-3"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
+                />
+              </svg>
+              Edit
+            </button>
+
+            <!-- Status Section -->
             <ng-container *ngIf="editingGameId !== game.id">
               <span
                 class="px-3 py-1 rounded-full text-xs font-semibold uppercase"
@@ -73,58 +159,34 @@
               >
                 {{ game.status }}
               </span>
-
-              <button
-                *ngIf="currentUserId === game.created_by?.id && game.status !== 'completed'"
-                (click)="enableEdit(game)"
-                class="mt-2 text-xs bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-1 px-3 rounded transition-colors flex items-center gap-1 shadow-sm"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-3 h-3"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-                  />
-                </svg>
-                Edit
-              </button>
             </ng-container>
 
-            <!-- Edit View -->
+            <!-- Edit Interface -->
             <div
               *ngIf="editingGameId === game.id"
-              class="flex flex-col gap-2 items-end bg-gray-50 dark:bg-gray-700/50 p-2 rounded-lg border border-gray-200 dark:border-gray-600"
+              class="flex items-center gap-2 bg-gray-50 dark:bg-gray-700/50 p-1 rounded-lg border border-gray-200 dark:border-gray-600"
             >
               <select
                 [(ngModel)]="newStatus"
-                class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:ring-yellow-500 w-full"
+                class="bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-xs border border-gray-300 dark:border-gray-600 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-indigo-500 dark:focus:ring-yellow-500 w-28"
               >
                 <option *ngFor="let option of statusOptions" [value]="option.value">
                   {{ option.label }}
                 </option>
               </select>
 
-              <div class="flex gap-2">
-                <button
-                  (click)="saveStatus(game)"
-                  class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-3 py-1 rounded transition-colors shadow-sm"
-                >
-                  Save
-                </button>
-                <button
-                  (click)="cancelEdit()"
-                  class="text-xs bg-slate-500 hover:bg-slate-600 text-white font-medium px-3 py-1 rounded transition-colors shadow-sm"
-                >
-                  Cancel
-                </button>
-              </div>
+              <button
+                (click)="saveStatus(game)"
+                class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-2 py-1 rounded transition-colors shadow-sm"
+              >
+                ✔
+              </button>
+              <button
+                (click)="cancelEdit()"
+                class="text-xs bg-slate-500 hover:bg-slate-600 text-white font-medium px-2 py-1 rounded transition-colors shadow-sm"
+              >
+                ✕
+              </button>
             </div>
           </div>
         </div>

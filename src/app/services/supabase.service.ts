@@ -119,4 +119,13 @@ export class SupabaseService {
       },
     });
   }
+
+  async voteForChampion(gameId: string, championId: string) {
+    return await this.supabase.functions.invoke('voting', {
+      body: {
+        game_id: gameId,
+        champion_id: championId,
+      },
+    });
+  }
 }

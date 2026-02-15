@@ -17,6 +17,8 @@ export class GamesListComponent implements OnInit {
   error: string | null = null;
   currentUserId: string | null = null;
   editingGameId: string | null = null;
+  votingGameId: string | null = null;
+  selectedChampionId: string = '';
   newStatus: string = '';
 
   filters = [
@@ -85,6 +87,55 @@ export class GamesListComponent implements OnInit {
     } catch (err: any) {
       console.error('Error updating game status:', err);
       alert('Failed to update status: ' + err.message);
+    }
+  }
+
+  isPlayerInGame(game: any): boolean {
+    if (!this.currentUserId || !game.players) return false;
+    // Assuming backend returns a list of player objects or IDs.
+    // Based on previous response structure, it might be nested or direct.
+    // Let's assume game.players is an array of objects with player_id or id.
+    // The previous diff showed "game.players" usage.
+    // Adjusting based on standard join or previous code context:
+    // "game_players" was used in loop, then user changed it to "players".
+    // I'll check both just in case, or rely on what's in the object.
+    const players = game.players || game.game_players || [];
+    return players.some(
+      (p: any) =>
+        p.player_id === this.currentUserId ||
+        p.id === this.currentUserId ||
+        p.user_id === this.currentUserId,
+    );
+  }
+
+  initiateVote(game: any) {
+    this.votingGameId = game.id;
+    this.selectedChampionId = '';
+  }
+
+  cancelVote() {
+    this.votingGameId = null;
+    this.selectedChampionId = '';
+  }
+
+  async submitVote(game: any) {
+    if (!this.votingGameId || !this.selectedChampionId) return;
+
+    try {
+      const { error } = await this.supabase.voteForChampion(
+        this.votingGameId,
+        this.selectedChampionId,
+      );
+      if (error) throw error;
+
+      alert('Vote submitted successfully!');
+      this.votingGameId = null;
+      this.selectedChampionId = '';
+      // Optionally refresh games to reflect any status changes (e.g. if voting ends)
+      // this.fetchGames();
+    } catch (err: any) {
+      console.error('Error submitting vote:', err);
+      alert('Failed to submit vote: ' + err.message);
     }
   }
 }
