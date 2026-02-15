@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { SupabaseService } from '../services/supabase.service';
 
 @Component({
   selector: 'app-games-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './games-list.component.html',
   styleUrl: './games-list.component.css',
 })
@@ -47,7 +48,6 @@ export class GamesListComponent implements OnInit {
     try {
       const { data, error } = await this.supabase.getAllGames(this.selectedFilter);
       if (error) throw error;
-      console.log('Fetched games:', data);
       this.games = data?.data?.games || [];
     } catch (err: any) {
       this.error = err.message || 'Failed to fetch games';
@@ -75,15 +75,20 @@ export class GamesListComponent implements OnInit {
     if (!this.editingGameId) return;
 
     try {
-      const { error } = await this.supabase.updateGameStatus(this.editingGameId, this.newStatus);
+      const { data, error } = await this.supabase.updateGameStatus(
+        this.editingGameId,
+        this.newStatus,
+      );
       if (error) throw error;
 
-      // Update local state
-      game.status = this.newStatus;
-      this.editingGameId = null;
+      if (data?.data?.game) {
+        this.updateGameInList(data.data.game);
+      } else {
+        // Fallback if structure is different, though we expect the new structure
+        game.status = this.newStatus;
+      }
 
-      // If status became completed, we might want to refresh checking logic,
-      // but UI will auto-update based on *ngIf conditions
+      this.editingGameId = null;
     } catch (err: any) {
       console.error('Error updating game status:', err);
       alert('Failed to update status: ' + err.message);
@@ -122,20 +127,41 @@ export class GamesListComponent implements OnInit {
     if (!this.votingGameId || !this.selectedChampionId) return;
 
     try {
-      const { error } = await this.supabase.voteForChampion(
+      const { data, error } = await this.supabase.voteForChampion(
         this.votingGameId,
         this.selectedChampionId,
       );
       if (error) throw error;
 
       alert('Vote submitted successfully!');
+
+      if (data?.data?.game) {
+        this.updateGameInList(data.data.game);
+      }
+
       this.votingGameId = null;
       this.selectedChampionId = '';
-      // Optionally refresh games to reflect any status changes (e.g. if voting ends)
-      // this.fetchGames();
     } catch (err: any) {
       console.error('Error submitting vote:', err);
       alert('Failed to submit vote: ' + err.message);
     }
+  }
+
+  private updateGameInList(updatedGame: any) {
+    const index = this.games.findIndex((g) => g.id === updatedGame.id);
+    if (index !== -1) {
+      this.games[index] = updatedGame;
+    }
+  }
+
+  hasPlayerVoted(game: any): boolean {
+    if (!this.currentUserId || !game.voted_players) return false;
+    return game.voted_players.some((p: any) => p.id === this.currentUserId);
+  }
+
+  getRemainingVotes(game: any): number {
+    const totalPlayers = game.players?.length || game.game_players?.length || 0;
+    const votedPlayers = game.voted_players?.length || 0;
+    return Math.max(0, totalPlayers - votedPlayers);
   }
 }

@@ -70,6 +70,10 @@ export class SupabaseService {
       .order('username', { ascending: true });
   }
 
+  async getProfile(userId: string) {
+    return await this.supabase.from('profiles').select('username').eq('id', userId).single();
+  }
+
   async createGame(name: string, playerIds: string[]) {
     await this.supabase.functions.invoke('create-game', {
       body: {
