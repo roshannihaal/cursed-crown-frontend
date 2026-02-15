@@ -1,15 +1,17 @@
 <div
-  class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-6 transition-colors duration-300"
+  class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white p-4 sm:p-6 transition-colors duration-300"
 >
-  <div class="max-w-4xl mx-auto">
-    <div class="flex justify-between items-center mb-8">
+  <div class="w-full sm:max-w-4xl mx-auto">
+    <div class="flex justify-between items-center mb-6 sm:mb-8">
       <div class="space-y-1">
         <h1
-          class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-yellow-400 dark:to-yellow-600"
+          class="text-2xl sm:text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-yellow-400 dark:to-yellow-600"
         >
           Public Games
         </h1>
-        <p class="text-slate-500 dark:text-slate-400">Explore completed battles and history.</p>
+        <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400">
+          Explore completed battles and history.
+        </p>
       </div>
     </div>
 
@@ -31,20 +33,22 @@
       <p class="text-xl text-gray-500 dark:text-gray-400">No completed games found.</p>
     </div>
 
-    <div class="grid gap-4">
+    <div class="grid gap-3 sm:gap-4">
       <div
         *ngFor="let game of games"
-        class="bg-white dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-yellow-500 shadow-sm dark:shadow-none transition-all"
+        class="bg-white dark:bg-gray-800 p-3 sm:p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-yellow-500 shadow-sm dark:shadow-none transition-all"
       >
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-1">{{ game.name }}</h3>
-            <p class="text-sm text-gray-500 dark:text-gray-400">
+        <div class="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0">
+          <div class="w-full sm:w-auto">
+            <h3 class="text-lg sm:text-xl font-bold text-gray-900 dark:text-white mb-1">
+              {{ game.name }}
+            </h3>
+            <p class="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
               <!-- Created by is not available in the current select, might need to add it if needed -->
             </p>
           </div>
 
-          <div class="flex flex-col items-end gap-1">
+          <div class="flex flex-col items-start sm:items-end gap-1 w-full sm:w-auto">
             <span
               class="px-3 py-1 rounded-full text-xs font-semibold uppercase"
               [ngClass]="{
@@ -75,10 +79,10 @@
       </div>
     </div>
 
-    <div *ngIf="hasMore && !loading" class="mt-8 flex justify-center">
+    <div *ngIf="hasMore && !loading" class="mt-6 sm:mt-8 flex justify-center">
       <button
         (click)="loadMore()"
-        class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-full transition-colors shadow-sm"
+        class="bg-indigo-600 hover:bg-indigo-700 text-white text-sm sm:text-base font-medium py-2 px-6 rounded-full transition-colors shadow-sm"
       >
         Load More
       </button>

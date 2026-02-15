@@ -1,12 +1,16 @@
-<div class="max-w-4xl mx-auto py-8">
-  <div class="space-y-8">
+<div class="w-full sm:max-w-4xl mx-auto py-4 sm:py-8">
+  <div class="space-y-6 sm:space-y-8">
     <!-- Header -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
       <div class="space-y-1">
-        <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+        <h2
+          class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white"
+        >
           Start New Game
         </h2>
-        <p class="text-slate-500 dark:text-slate-400">Assemble your champions for a new battle.</p>
+        <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400">
+          Assemble your champions for a new battle.
+        </p>
       </div>
       <a
         [routerLink]="['/user', userId()]"
@@ -30,21 +34,21 @@
     </div>
 
     <!-- Form -->
-    <form [formGroup]="gameForm" (ngSubmit)="onSubmit()" class="space-y-8">
+    <form [formGroup]="gameForm" (ngSubmit)="onSubmit()" class="space-y-6 sm:space-y-8">
       <!-- Game Name -->
       <div
-        class="bg-white dark:bg-slate-900 p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/40 dark:shadow-none"
+        class="bg-white dark:bg-slate-900 p-6 sm:p-8 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-xl shadow-slate-200/40 dark:shadow-none"
       >
         <label
           for="name"
-          class="block text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-4"
+          class="block text-xs sm:text-sm font-bold text-slate-700 dark:text-slate-300 uppercase tracking-widest mb-4"
           >Game Name</label
         >
         <input
           id="name"
           formControlName="name"
           type="text"
-          class="block w-full px-6 py-4 text-xl rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
+          class="block w-full px-4 sm:px-6 py-3 sm:py-4 text-lg sm:text-xl rounded-2xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 transition-all outline-none"
           placeholder="The Eternal Siege"
         />
         <div
@@ -56,11 +60,15 @@
       </div>
 
       <!-- Player Selection -->
-      <div class="space-y-6">
-        <div class="flex items-center justify-between px-2">
-          <h3 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+      <div class="space-y-4 sm:space-y-6">
+        <div
+          class="flex flex-col sm:flex-row items-start sm:items-center justify-between px-2 gap-2"
+        >
+          <h3
+            class="text-lg sm:text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2"
+          >
             Select Your Allies
-            <span class="text-sm font-medium text-slate-500 dark:text-slate-400">
+            <span class="text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
               ({{ selectedPlayerIds().size - 1 }} selected)
             </span>
           </h3>
@@ -127,21 +135,21 @@
       </div>
 
       <!-- Action Button -->
-      <div class="pt-8">
+      <div class="pt-6 sm:pt-8">
         <button
           type="submit"
           [disabled]="!canSubmit || isSaving()"
-          class="w-full py-4 text-xl font-black rounded-3xl text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-2xl shadow-indigo-500/40 transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3"
+          class="w-full py-3 sm:py-4 text-lg sm:text-xl font-black rounded-3xl text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-2xl shadow-indigo-500/40 transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3"
         >
           <span
             *ngIf="isSaving()"
-            class="animate-spin h-6 w-6 border-4 border-white border-t-transparent rounded-full"
+            class="animate-spin h-5 sm:h-6 w-5 sm:w-6 border-4 border-white border-t-transparent rounded-full"
           ></span>
           {{ isSaving() ? 'Forging Game...' : 'Start New Battle' }}
         </button>
         <p
           *ngIf="!canSubmit && gameForm.valid"
-          class="text-center mt-4 text-sm text-slate-500 dark:text-slate-400"
+          class="text-center mt-4 text-xs sm:text-sm text-slate-500 dark:text-slate-400"
         >
           You need at least 2 more players to begin the journey.
         </p>

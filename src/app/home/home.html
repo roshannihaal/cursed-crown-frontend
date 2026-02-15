@@ -1,11 +1,13 @@
-<div class="max-w-4xl mx-auto space-y-8">
+<div class="w-full sm:max-w-4xl mx-auto space-y-8">
   <div
-    class="relative overflow-hidden bg-white dark:bg-slate-900 rounded-[2.5rem] p-12 shadow-2xl shadow-slate-200 dark:shadow-none border border-slate-100 dark:border-slate-800"
+    class="relative overflow-hidden bg-white dark:bg-slate-900 sm:rounded-[2.5rem] p-6 sm:p-8 md:p-12 shadow-2xl shadow-slate-200 dark:shadow-none sm:border border-slate-100 dark:border-slate-800"
   >
     <!-- Decorative element -->
-    <div class="absolute -top-24 -right-24 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
     <div
-      class="absolute -bottom-24 -left-24 w-64 h-64 bg-violet-500/10 rounded-full blur-3xl"
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:-top-24 sm:-right-24 sm:translate-x-0 sm:translate-y-0 sm:left-auto sm:top-auto w-32 sm:w-64 h-32 sm:h-64 bg-indigo-500/10 rounded-full blur-3xl"
+    ></div>
+    <div
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 sm:-bottom-24 sm:-left-24 sm:translate-x-0 sm:translate-y-0 sm:top-auto sm:left-auto w-32 sm:w-64 h-32 sm:h-64 bg-violet-500/10 rounded-full blur-3xl"
     ></div>
 
     <div class="relative z-10 text-center space-y-6">
@@ -15,7 +17,9 @@
         <span class="text-4xl">👑</span>
       </div>
 
-      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+      <h1
+        class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white"
+      >
         Welcome Back,
         <span
           class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600 dark:from-indigo-400 dark:to-violet-400"
@@ -23,15 +27,15 @@
         >
       </h1>
 
-      <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
+      <p class="text-base sm:text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
         Your champion tracking dashboard is ready. Begin your journey and track your progress in the
         CursedCrown.
       </p>
 
-      <div class="pt-8 flex flex-wrap justify-center gap-4">
+      <div class="pt-6 sm:pt-8 flex flex-wrap justify-center gap-3 sm:gap-4">
         <button
           [routerLink]="['/user', userId(), 'create_game']"
-          class="px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-2xl shadow-lg shadow-indigo-500/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+          class="px-6 sm:px-8 py-2.5 sm:py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm sm:text-base font-bold rounded-2xl shadow-lg shadow-indigo-500/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +43,7 @@
             viewBox="0 0 24 24"
             stroke-width="2"
             stroke="currentColor"
-            class="w-5 h-5"
+            class="w-4 h-4 sm:w-5 sm:h-5"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
@@ -47,7 +51,7 @@
         </button>
         <button
           [routerLink]="['/user', userId(), 'games-list']"
-          class="px-8 py-3 bg-pink-600 hover:bg-pink-700 text-white font-bold rounded-2xl shadow-lg shadow-pink-500/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+          class="px-6 sm:px-8 py-2.5 sm:py-3 bg-pink-600 hover:bg-pink-700 text-white text-sm sm:text-base font-bold rounded-2xl shadow-lg shadow-pink-500/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +59,7 @@
             viewBox="0 0 24 24"
             stroke-width="2"
             stroke="currentColor"
-            class="w-5 h-5"
+            class="w-4 h-4 sm:w-5 sm:h-5"
           >
             <path
               stroke-linecap="round"
@@ -65,23 +69,23 @@
           </svg>
           Games List
         </button>
-        <button
-          class="px-8 py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold rounded-2xl transition-all"
+        <!-- <button
+          class="px-6 sm:px-8 py-2.5 sm:py-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-sm sm:text-base font-bold rounded-2xl transition-all"
         >
           View Champions
-        </button>
-        <button
+        </button> -->
+        <!-- <button
           (click)="signOut()"
           routerLink="/auth/login"
-          class="px-8 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold rounded-2xl transition-all"
+          class="px-6 sm:px-8 py-2.5 sm:py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-900 dark:text-white text-sm sm:text-base font-bold rounded-2xl transition-all"
         >
           Sign Out
-        </button>
+        </button> -->
       </div>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     @for (
       stat of [
         { label: 'Active Champions', value: '0', color: 'text-indigo-600' },
@@ -97,5 +101,5 @@
         <p class="text-2xl font-black mt-2 {{ stat.color }} dark:text-white">{{ stat.value }}</p>
       </div>
     }
-  </div>
+  </div> -->
 </div>
